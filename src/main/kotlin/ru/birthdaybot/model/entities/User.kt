@@ -1,5 +1,6 @@
 package ru.birthdaybot.model.entities
 
+import java.io.Serializable
 import java.time.LocalDate
 import javax.persistence.*
 
@@ -7,24 +8,18 @@ import javax.persistence.*
 @Table(name = "users")
 data class User(
     @Id
-    @Column(name = "id")
+    @Column(name = "user_id")
     // telegramid
-    var id: String? = null,
+    var id: Long? = null,
 
-    @Column(name = "birtday")
-    var birtday: LocalDate?,
+    @Column(name = "birthday")
+    var birthday: LocalDate?,
 
-    @Column(name = "group_id", nullable = false)
-    @ManyToMany(
-        targetEntity = Team::class,
-        mappedBy = "groupid",
-        cascade = [CascadeType.ALL]
-    )
-    var groupid: List<Team>,
+
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
+    var teams: MutableList<Team>? = mutableListOf(),
 
     @Column(name = "fio")
-    var fio: String? = null,
-
-
-    )
+    var fio: String? = null
+) : Serializable
 

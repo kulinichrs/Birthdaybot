@@ -1,5 +1,6 @@
 package ru.birthdaybot.model.entities
 
+import java.io.Serializable
 import javax.persistence.*
 
 @Entity
@@ -7,8 +8,8 @@ import javax.persistence.*
 data class Team(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    var groupid: Int? = null,
+    @Column(name = "team_id")
+    var teamId: Int? = null,
 
     @Column
     var name: String? = null,
@@ -17,5 +18,11 @@ data class Team(
     var defaultText: String? = null,
 
     @Column(name = "description", nullable = true)
-    var description: String
-)
+    var description: String? = null,
+
+    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @JoinTable(name = "team_user",
+        joinColumns = [JoinColumn(name = "team_id")],
+        inverseJoinColumns = [JoinColumn(name = "user_id")])
+    var users: MutableList<User>? = mutableListOf()
+) : Serializable

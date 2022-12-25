@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter
 import java.util.stream.Collectors
 
 @Service
-class UserServiceImpl(@Autowired val repo : UserRepository) : UserService {
+class UserServiceImpl(@Autowired val repo: UserRepository) : UserService {
 
     @Transactional(readOnly = false)
     override fun introduce(id: Long, introduceString: String) {
@@ -19,8 +19,8 @@ class UserServiceImpl(@Autowired val repo : UserRepository) : UserService {
         val date = LocalDate.parse(str.last(), DateTimeFormatter.ofPattern("dd.MM.yyyy"))
         val fio = str.subList(0, str.size - 1).stream().collect(Collectors.joining(" "))
 
-        val user = repo.findById(id).orElse(User(id.toString(), date, emptyList(), fio))
-        user.birtday = date
+        val user = repo.findById(id).orElse(User(id, date, fio = fio))
+        user.birthday = date
         user.fio = fio
 
         repo.save(user)
