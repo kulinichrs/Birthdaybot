@@ -5,11 +5,13 @@ import org.springframework.stereotype.Service
 import ru.birthdaybot.api.repository.TeamRepository
 import ru.birthdaybot.api.repository.UserRepository
 import ru.birthdaybot.api.service.TeamService
+import ru.birthdaybot.excepion.ItemAlreadyExistsException
 import ru.birthdaybot.excepion.ItemNotFoundException
 import ru.birthdaybot.model.dto.TeamDto
 import ru.birthdaybot.model.dto.UserInfo
 import ru.birthdaybot.model.entities.Team
 import ru.birthdaybot.model.entities.User
+import javax.transaction.Transactional
 
 @Service
 class TeamServiceImpl(
@@ -18,6 +20,7 @@ class TeamServiceImpl(
 ) : TeamService {
 
     override fun createTeam(teamInfo: TeamDto) {
+        teamRepository.findTeamByTeamName(teamInfo.teamName)?.let { throw ItemAlreadyExistsException("Команда с таким именем уже существует") }
         teamRepository.save(
             Team(
                 name = teamInfo.teamName,
@@ -27,13 +30,23 @@ class TeamServiceImpl(
         )
     }
 
-    override fun joinTeam(teamInfo: TeamDto, userInfo: UserInfo) {
-        teamRepository.findTeamByTeamName(teamInfo.teamName)?.apply {
+    @Transactional
+    override fun updateTeam(teamInfo: TeamDto) {
+        teamRepository.findTeamByTeamName(teamInfo.teamName)?.let {
+            with(it) {
+                if (teamInfo.credentials != null) defaultText = teamInfo.credentials
+                if (teamInfo.description != null) name = teamInfo.description
+            }
+         }
+    }
+
+    override fun joinTeam(teamName: String, userInfo: UserInfo) {
+        teamRepository.findTeamByTeamName(teamName)?.apply {
             val user = userRepository.findById(userInfo.chatId).orElseGet {
                 User(
                     id = userInfo.chatId,
                     birthday = userInfo.birthday,
-                    fio = "${userInfo.firstName} ${userInfo.lastName}"
+                    fio = "${userInfo.firstName}${if (userInfo.lastName != null) " ${userInfo.lastName}" else ""}"
                 )
             }
             users?.add(user)

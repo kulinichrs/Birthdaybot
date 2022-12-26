@@ -10,7 +10,7 @@ class UserInfo(message: Message) {
     } else {
         null
     }
-    val userName: String = message.chat.userName
+    val userName: String? = message.chat.userName
     val firstName: String? = message.chat.firstName
     val lastName: String? = message.chat.lastName
     val birthday: LocalDate? = null
