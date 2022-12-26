@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional
 import ru.birthdaybot.api.repository.UserRepository
 import ru.birthdaybot.api.service.UserService
 import ru.birthdaybot.model.entities.User
+import java.lang.IllegalArgumentException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.stream.Collectors
@@ -16,8 +17,11 @@ class UserServiceImpl(@Autowired val repo: UserRepository) : UserService {
     @Transactional(readOnly = false)
     override fun introduce(id: Long, introduceString: String) {
         val str = introduceString.replace("  ", " ").split(" ")
+        if (str.size < 3) {
+            throw IllegalArgumentException("Ошибка ввода данных пользователя")
+        }
         val date = LocalDate.parse(str.last(), DateTimeFormatter.ofPattern("dd.MM.yyyy"))
-        val fio = str.subList(0, str.size - 1).stream().collect(Collectors.joining(" "))
+        val fio = str.subList(1, str.size - 1).stream().collect(Collectors.joining(" "))
 
         val user = repo.findById(id).orElse(User(id, date, fio = fio))
         user.birthday = date

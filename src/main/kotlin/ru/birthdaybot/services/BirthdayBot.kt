@@ -3,17 +3,20 @@ package ru.birthdaybot.services
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow
+import ru.birthdaybot.api.service.EventService
 import ru.birthdaybot.api.service.TeamService
 import ru.birthdaybot.excepion.ItemAlreadyExistsException
 import ru.birthdaybot.excepion.ItemNotFoundException
 import ru.birthdaybot.model.dto.TeamDto
 import ru.birthdaybot.model.dto.UserInfo
+import java.time.LocalDate
 
 @EnableScheduling
 @Service
@@ -26,6 +29,13 @@ class BirthdayBot : TelegramLongPollingBot() {
 
     @Autowired
     lateinit var teamService: TeamService
+
+
+    @Value("\${notification.daysbefore}")
+    private val daysBefore : Long = 3
+
+    @Autowired
+    lateinit var birthdayService: EventService
 
 
     override fun getBotToken(): String = token
@@ -128,6 +138,16 @@ class BirthdayBot : TelegramLongPollingBot() {
             row
         }
         return markup
+    }
+
+    @Scheduled(cron = "\${telegram.timenotification}")
+    private fun notifyUsersBySchedule() {
+        val searchDate = LocalDate.now().plusDays(daysBefore)
+        birthdayService.getEvents(searchDate).forEach{ event ->
+            event.userIds.forEach{userId ->
+                sendNotification(userId, event.message, emptyList())
+            }
+        }
     }
 
 }

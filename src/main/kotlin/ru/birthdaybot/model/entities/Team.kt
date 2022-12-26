@@ -24,5 +24,5 @@ data class Team(
     @JoinTable(name = "team_user",
         joinColumns = [JoinColumn(name = "team_id")],
         inverseJoinColumns = [JoinColumn(name = "user_id")])
-    var users: MutableList<User>? = mutableListOf()
+    var users: MutableList<User> = mutableListOf()
 ) : Serializable

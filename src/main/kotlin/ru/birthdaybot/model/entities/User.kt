@@ -17,7 +17,7 @@ data class User(
 
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
-    var teams: MutableList<Team>? = mutableListOf(),
+    var teams: MutableList<Team> = mutableListOf(),
 
     @Column(name = "fio")
     var fio: String? = null
