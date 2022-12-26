@@ -49,10 +49,12 @@ class BirthdayBot : TelegramLongPollingBot() {
             val buttons: MutableList<String> = mutableListOf("Главное меню")
             val responseText = if (message.hasText()) {
                 val messageText = message.text
-                val text: String =
-                    when  {
+                when  {
                         messageText.contains("/createteam", true) -> {
                            createTeam(messageText)
+                        }
+                        messageText.contains("/createteam1", true) -> {
+                            createTeam(messageText)
                         }
                         messageText.contains("/jointeam", true) -> {
                             joinTeam(messageText, UserInfo(message))
