@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+
+  birthdaybot:
+    container_name: birthdaybot
+    build: .
+    ports:
+      - '9090:9090'
+    depends_on:
+      - db
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
