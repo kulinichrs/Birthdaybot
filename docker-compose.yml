@@ -22,7 +22,7 @@ services:
     build:
       context: .
       network: host
-    image: birthdaybot/bot:v1
+    image: kulinichrs/birthdaybot
     ports:
       - '9090'
     depends_on:
