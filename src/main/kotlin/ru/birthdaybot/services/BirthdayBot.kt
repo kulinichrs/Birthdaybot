@@ -53,8 +53,8 @@ class BirthdayBot : TelegramLongPollingBot() {
                         messageText.contains("/createteam", true) -> {
                            createTeam(messageText)
                         }
-                        messageText.contains("/createteam1", true) -> {
-                            createTeam(messageText)
+                        messageText.contains("/hello", true) -> {
+                            "hello bro"
                         }
                         messageText.contains("/jointeam", true) -> {
                             joinTeam(messageText, UserInfo(message))
