@@ -70,7 +70,6 @@ class BirthdayBot : TelegramLongPollingBot() {
                             " "
                         }
                     }
-                " "
             } else {
                 "text"
             }
@@ -127,7 +126,7 @@ class BirthdayBot : TelegramLongPollingBot() {
     private fun sendNotification(chatId: Long, responseText: String, buttons: List<String>) {
         val responseMessage = SendMessage(chatId.toString(), responseText)
         responseMessage.enableMarkdown(true)
-        responseMessage.replyMarkup = getReplyMarkup(buttons)
+//        responseMessage.replyMarkup = getReplyMarkup(buttons)
 
         execute(responseMessage)
     }
