@@ -110,7 +110,7 @@
                 <artifactId>liquibase-maven-plugin</artifactId>
                 <version>4.5.0</version>
                 <configuration>
-                    <url>jdbc:postgresql://db:5432/postgres</url>
+                    <url>jdbc:postgresql://localhost:5432/postgres</url>
                     <username>postgres</username>
                     <password>postgres</password>
                 </configuration>

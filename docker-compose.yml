@@ -19,8 +19,11 @@ services:
 
   birthdaybot:
     container_name: birthdaybot
-    build: .
+    build:
+      context: .
+      network: host
+    image: birthdaybot/bot:v1
     ports:
-      - '9090:9090'
+      - '9090'
     depends_on:
       - db
