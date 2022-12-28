@@ -54,7 +54,17 @@ class TeamServiceImpl(
         } ?: throw ItemNotFoundException("Team is not found")
     }
 
+    override fun leaveTeam(teamName: String, userInfo: UserInfo) {
+        teamRepository.findTeamByTeamName(teamName)?.apply {
+            val user = userRepository.findById(userInfo.chatId).get()
+            users.remove(user)
+            teamRepository.save(this)
+        } ?: throw ItemNotFoundException("Team is not found")
+    }
+
     override fun deleteTeam(teamName: String) {
-        throw UnsupportedOperationException()
+        teamRepository.findTeamByTeamName(teamName)?.let {
+            teamRepository.delete(it)
+        } ?: throw ItemAlreadyExistsException("Такой команды не существует")
     }
 }

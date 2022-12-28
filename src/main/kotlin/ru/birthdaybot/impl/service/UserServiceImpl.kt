@@ -24,8 +24,4 @@ class UserServiceImpl(@Autowired val repo: UserRepository) : UserService {
 
         repo.save(user)
     }
-
-    override fun delete(id: Long) {
-        throw UnsupportedOperationException()
-    }
 }

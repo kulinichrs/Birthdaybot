@@ -42,7 +42,7 @@ class BirthdayBot : TelegramLongPollingBot() {
             if (message.hasText() && message.text.startsWith("/")) {
                 val args = (message.text).split(" ").filter { it.isNotBlank() }
                 val result = (commands[args[0].lowercase()])?.execute(args.subList(1, args.size), UserInfo(message))
-                    ?: "Возможно, вы неправильную команду. Используйте /help для помощи"
+                    ?: "Возможно, вы ввели неправильную команду. Используйте /help для помощи"
                 sendNotification(message.chatId, result, emptyList())
             }
 
