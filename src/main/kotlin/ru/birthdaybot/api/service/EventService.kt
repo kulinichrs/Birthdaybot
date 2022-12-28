@@ -8,5 +8,5 @@ import java.time.LocalDate
  */
 interface EventService {
 
-    fun getEvents(onDate : LocalDate) : Collection<EventDto>
+    fun getEvents(onDate: LocalDate): Collection<EventDto>
 }

@@ -21,8 +21,10 @@ data class Team(
     var description: String? = null,
 
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    @JoinTable(name = "team_user",
+    @JoinTable(
+        name = "team_user",
         joinColumns = [JoinColumn(name = "team_id")],
-        inverseJoinColumns = [JoinColumn(name = "user_id")])
+        inverseJoinColumns = [JoinColumn(name = "user_id")]
+    )
     var users: MutableList<User> = mutableListOf()
 ) : Serializable

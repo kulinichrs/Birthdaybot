@@ -45,31 +45,17 @@ class BirthdayBot : TelegramLongPollingBot() {
                     ?: "Возможно, вы ввели неправильную команду. Используйте /help для помощи"
                 sendNotification(message.chatId, result, emptyList())
             }
-
         }
     }
 
     private fun sendNotification(chatId: Long, responseText: String, buttons: List<String>) {
         val responseMessage = SendMessage(chatId.toString(), responseText)
         responseMessage.enableMarkdown(true)
-//        responseMessage.replyMarkup = getReplyMarkup(buttons)
         execute(responseMessage)
     }
 
-//    private fun getReplyMarkup(allButtons: List<String>): ReplyKeyboardMarkup {
-//        val markup = ReplyKeyboardMarkup()
-//        markup.keyboard = allButtons.map { rowButton ->
-//            val row = KeyboardRow()
-//            row.add(rowButton)
-//            row
-//        }
-//        return markup
-//    }
-
     @Scheduled(cron = "\${telegram.timenotification}")
     private fun notifyUsersBySchedule() {
-        //TODO удалить
-        println("Запустили")
         val searchDate = LocalDate.now().plusDays(daysBefore)
         birthdayService.getEvents(searchDate).forEach { event ->
             event.userIds.forEach { userId ->

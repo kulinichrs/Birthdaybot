@@ -20,7 +20,8 @@ class TeamServiceImpl(
 ) : TeamService {
 
     override fun createTeam(teamInfo: TeamDto) {
-        teamRepository.findTeamByTeamName(teamInfo.teamName)?.let { throw ItemAlreadyExistsException("Команда с таким именем уже существует") }
+        teamRepository.findTeamByTeamName(teamInfo.teamName)
+            ?.let { throw ItemAlreadyExistsException("Команда с таким именем уже существует") }
         teamRepository.save(
             Team(
                 name = teamInfo.teamName,
@@ -32,26 +33,29 @@ class TeamServiceImpl(
 
     @Transactional
     override fun updateTeam(teamInfo: TeamDto) {
-        println(teamInfo)
         teamRepository.findTeamByTeamName(teamInfo.teamName)?.let {
             with(it) {
                 if (teamInfo.credentials != null) defaultText = teamInfo.credentials
                 if (teamInfo.description != null) description = teamInfo.description
             }
-         }
+        }
     }
 
     override fun joinTeam(teamName: String, userInfo: UserInfo) {
-        teamRepository.findTeamByTeamName(teamName)?.apply {
-            val user = userRepository.findById(userInfo.chatId).orElseGet {
-                User(
-                    id = userInfo.chatId,
-                    fio = "${userInfo.firstName}${if (userInfo.lastName != null) " ${userInfo.lastName}" else ""}"
-                )
-            }
-            users.add(user)
-            teamRepository.save(this)
-        } ?: throw ItemNotFoundException("Team is not found")
+        val team = teamRepository.findTeamByTeamName(teamName)
+        team ?: throw ItemNotFoundException("Такой команды не существует")
+        val user = userRepository.findById(userInfo.chatId).orElseGet {
+            User(
+                id = userInfo.chatId,
+                fio = "${userInfo.firstName}${if (userInfo.lastName != null) " ${userInfo.lastName}" else ""}"
+            )
+        }
+        if (!team.users.contains(user)) {
+            team.users.add(user)
+            teamRepository.save(team)
+        } else {
+            throw ItemAlreadyExistsException("Пользователь уже состоит в команде ${team.name}")
+        }
     }
 
     override fun leaveTeam(teamName: String, userInfo: UserInfo) {
@@ -59,7 +63,7 @@ class TeamServiceImpl(
             val user = userRepository.findById(userInfo.chatId).get()
             users.remove(user)
             teamRepository.save(this)
-        } ?: throw ItemNotFoundException("Team is not found")
+        } ?: throw ItemNotFoundException("Такой команды не существует")
     }
 
     override fun deleteTeam(teamName: String) {

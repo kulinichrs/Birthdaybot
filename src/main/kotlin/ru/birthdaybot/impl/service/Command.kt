@@ -69,7 +69,13 @@ class UpdateTeamCommand(@Autowired val teamService: TeamService) : AbstractComma
     override val commandParam = BotCommand.UPDATE_TEAM
 
     override fun invoke(args: List<String>, userInfo: UserInfo) {
-        teamService.updateTeam(TeamDto(args[0], if (args.size >= 2) args[1] else null, if (args.size >= 3) args[2] else null))
+        teamService.updateTeam(
+            TeamDto(
+                args[0],
+                if (args.size >= 2) args[1] else null,
+                if (args.size >= 3) args[2] else null
+            )
+        )
     }
 }
 
@@ -104,7 +110,8 @@ class LeaveTeamCommand(@Autowired val teamService: TeamService) : AbstractComman
 @Component("/help")
 class HelpCommand : Command {
     override fun execute(args: List<String>, userInfo: UserInfo): String {
-        return BotCommand.values().joinToString(separator = ",\n", prefix = "Список команд: \n") { "${it.commandText}  - ${it.description}"}
+        return BotCommand.values()
+            .joinToString(separator = ",\n", prefix = "Список команд: \n") { "${it.commandText}  - ${it.description}" }
     }
 }
 
