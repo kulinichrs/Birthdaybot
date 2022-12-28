@@ -30,10 +30,10 @@ abstract class AbstractCommand : Command {
                 is ItemAlreadyExistsException -> e.message
                 is DateTimeParseException -> {
                     e.printStackTrace()
-                    "Неверный формат даты. Корретный формат dd.MM.yyyy"
+                    "Неверный формат даты. Корректный формат: dd.MM.yyyy"
                 }
 
-                is UnsupportedOperationException -> "Я такого еще не умею"
+                is UnsupportedOperationException -> "Я такого ещё не умею"
                 else -> {
                     e.printStackTrace()
                     "Inner error"
@@ -91,12 +91,12 @@ class DeleteTeamCommand(@Autowired val teamService: TeamService) : AbstractComma
     }
 }
 
-@Component("/leave")
-class LeaveCommand(@Autowired val userService: UserService) : AbstractCommand() {
-    override val commandParam = BotCommand.LEAVE
+@Component("/leaveteam")
+class LeaveTeamCommand(@Autowired val teamService: TeamService) : AbstractCommand() {
+    override val commandParam = BotCommand.LEAVE_TEAM
 
     override fun invoke(args: List<String>, userInfo: UserInfo) {
-        userService.delete(userInfo.chatId)
+        teamService.leaveTeam(args.first(), userInfo)
     }
 }
 
@@ -139,7 +139,7 @@ enum class BotCommand(
     UPDATE_TEAM(
         1,
         "Обновить инфо по группе",
-        "/updateteam teamName [credentinals] [description]",
+        "/updateteam teamName [credentials] [description]",
         "Группа успешно отредактирована"
     ),
     INTRODUCE(
@@ -154,12 +154,11 @@ enum class BotCommand(
         "/deleteteam name",
         "Группа удалена"
     ),
-    LEAVE(
-        //TODO по какому id/name удаляем пользователя? Нужен  метод, чтобы вывести пользователей в группе?
+    LEAVE_TEAM(
         1,
         "Покинуть группу",
-        "/leave name",
-        "Пользователь удален из группы"
+        "/leaveteam teamName",
+        "Вы вышли из группы"
     ),
     HELP(
         0,
