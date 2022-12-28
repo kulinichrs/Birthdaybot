@@ -7,15 +7,15 @@ create table team (
     );
 
 create table users (
-       user_id integer not null,
+       user_id bigint not null,
        birthday date,
        fio varchar(512),
        primary key (user_id)
     );
 
 create table team_user (
-       team_id integer not null,
-       user_id integer not null,
+       team_id serial not null,
+       user_id bigint not null,
        foreign key (user_id) references users,
        foreign key (team_id) references team
     );

@@ -13,7 +13,7 @@ data class User(
     var id: Long? = null,
 
     @Column(name = "birthday")
-    var birthday: LocalDate?,
+    var birthday: LocalDate? = null,
 
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)

@@ -32,10 +32,11 @@ class TeamServiceImpl(
 
     @Transactional
     override fun updateTeam(teamInfo: TeamDto) {
+        println(teamInfo)
         teamRepository.findTeamByTeamName(teamInfo.teamName)?.let {
             with(it) {
                 if (teamInfo.credentials != null) defaultText = teamInfo.credentials
-                if (teamInfo.description != null) name = teamInfo.description
+                if (teamInfo.description != null) description = teamInfo.description
             }
          }
     }
@@ -45,12 +46,15 @@ class TeamServiceImpl(
             val user = userRepository.findById(userInfo.chatId).orElseGet {
                 User(
                     id = userInfo.chatId,
-                    birthday = userInfo.birthday,
                     fio = "${userInfo.firstName}${if (userInfo.lastName != null) " ${userInfo.lastName}" else ""}"
                 )
             }
-            users?.add(user)
+            users.add(user)
             teamRepository.save(this)
         } ?: throw ItemNotFoundException("Team is not found")
+    }
+
+    override fun deleteTeam(teamName: String) {
+        throw UnsupportedOperationException()
     }
 }
