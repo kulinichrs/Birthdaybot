@@ -9,6 +9,7 @@ class BirtdayBotApplicationTests {
 
     @Test
     fun contextLoads() {
+        // Рома обещал сделать тесты в отдельном репозитории -> shorturl.at/cvyO3
         assertTrue(true)
     }
 
