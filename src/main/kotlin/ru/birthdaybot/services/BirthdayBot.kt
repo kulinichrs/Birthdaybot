@@ -7,7 +7,9 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.Update
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove
 import ru.birthdaybot.api.service.EventService
 import ru.birthdaybot.impl.service.Command
 import ru.birthdaybot.model.dto.UserInfo
@@ -51,7 +53,7 @@ class BirthdayBot : TelegramLongPollingBot() {
     private fun sendNotification(chatId: Long, responseText: String, buttons: List<String>) {
         val responseMessage = SendMessage(chatId.toString(), responseText)
         responseMessage.enableMarkdown(true)
-        responseMessage.ReplyMarkup(ReplyKeyboardRemove(true))
+        responseMessage.replyMarkup =  ReplyKeyboardRemove(true)
         execute(responseMessage)
     }
 
