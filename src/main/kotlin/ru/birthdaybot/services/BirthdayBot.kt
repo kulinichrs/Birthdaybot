@@ -51,6 +51,7 @@ class BirthdayBot : TelegramLongPollingBot() {
     private fun sendNotification(chatId: Long, responseText: String, buttons: List<String>) {
         val responseMessage = SendMessage(chatId.toString(), responseText)
         responseMessage.enableMarkdown(true)
+        responseMessage.ReplyMarkup(ReplyKeyboardRemove(true))
         execute(responseMessage)
     }
 
